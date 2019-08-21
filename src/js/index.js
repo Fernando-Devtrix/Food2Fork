@@ -9,9 +9,8 @@ import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 const state ={}
-window.state = state;
-// SEARCH CTRL
 
+// SEARCH CTRL
 const controlSearch = async() => {
 	//1.- Get query from view
 	const query = searchView.getInput();
@@ -60,7 +59,6 @@ elements.searchResPages.addEventListener('click', e => {
 const ctrlRecipe = async() => {
 	// Get id from url
 	const id = window.location.hash.replace("#", '');
-	console.log(id);
 
 	if (id) {
 		// Prepare UI for changes
@@ -130,10 +128,6 @@ elements.shopping.addEventListener('click', e => {
 	}
 });
 
-
-state.likes = new Likes();
-likesView.toggleLikeMenu(state.likes.getNumLikes());
-//change this to  es6
 const controlLike = () => {
 	if(!state.likes) state.likes = new Likes();
 	const currentID = state.recipe.id;
@@ -165,6 +159,20 @@ const controlLike = () => {
 	} 
 	likesView.toggleLikeMenu(state.likes.getNumLikes());
 }; 
+	
+// Restore likes recipe on page 
+window.addEventListener('load', () => {
+	state.likes = new Likes();
+
+	// Restore likes
+	state.likes.readStorage();
+
+	// Toggle like menu button
+	likesView.toggleLikeMenu(state.likes.getNumLikes());
+
+	// Render existing likes
+	state.likes.likes.forEach(like => likesView.renderLike(like));
+});
 
 // Handling recipe buttons clicks
 elements.recipe.addEventListener('click', e => {
